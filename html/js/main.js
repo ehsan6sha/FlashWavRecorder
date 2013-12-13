@@ -46,6 +46,14 @@ function microphone_recorder_events() {
       $controls.find('.play_button').hide();
       $controls.find('.pause_button').show();
       break;
+      
+    case "recording_paused":
+      name = arguments[1];
+      $controls = controlsEl(name);
+      FWRecorder.hide();
+      $controls.find('.record_button img').attr('src', 'images/record.png');
+      $controls.find('.pause_button').hide();
+      break;
 
     case "recording_stopped":
       name = arguments[1];
@@ -53,6 +61,7 @@ function microphone_recorder_events() {
       var duration = arguments[2];
       FWRecorder.show();
       $controls.find('.record_button img').attr('src', 'images/record.png');
+      $controls.find('.pause_button').hide();
       $('#duration').text(duration.toFixed(4) + " seconds");
       $controls.find('.play_button').show();
       break;
