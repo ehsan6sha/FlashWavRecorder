@@ -1,4 +1,3 @@
-
 function microphone_recorder_events() {
   $('#status').text("Microphone recorder event: " + arguments[0]);
   var name, $controls;
@@ -45,6 +44,7 @@ function microphone_recorder_events() {
       FWRecorder.hide();
       $controls.find('.record_button img').attr('src', 'images/stop.png');
       $controls.find('.play_button').hide();
+      $controls.find('.pause_button').show();
       break;
 
     case "recording_stopped":
