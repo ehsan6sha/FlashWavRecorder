@@ -63,6 +63,9 @@ Flash Events
 
 * name - of the recording that was specified when record was called
 * duration - of the recording as a floating point value in seconds
+* 
+
+**recording_paused**: recording audio data is paused.
 
 **playing**: playing back the recorded audio data
 
