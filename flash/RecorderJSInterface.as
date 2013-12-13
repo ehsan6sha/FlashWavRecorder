@@ -26,6 +26,7 @@ package {
 
     public static var RECORDING:String = "recording";
     public static var RECORDING_STOPPED:String = "recording_stopped";
+	public static var Recording_Paused:String = "recording_paused";
 
     public static var PLAYING:String = "playing";
     public static var STOPPED:String = "stopped";
@@ -62,6 +63,7 @@ package {
         ExternalInterface.addCallback("setUseEchoSuppression", setUseEchoSuppression);
         ExternalInterface.addCallback("setLoopBack", setLoopBack);
         ExternalInterface.addCallback("getMicrophone", getMicrophone);
+		ExternalInterface.addCallback("setactivitylevel", setactivitylevel);
       }
       this.recorder.addEventListener(MicrophoneRecorder.SOUND_COMPLETE, playComplete);
       this.recorder.addEventListener(MicrophoneRecorder.PLAYBACK_STARTED, playbackStarted);
@@ -70,9 +72,10 @@ package {
 
     public function ready(width:int, height:int):void {
       ExternalInterface.call(this.eventHandler, RecorderJSInterface.READY, width, height);
-      if (!this.recorder.mic.muted) {
-        onMicrophoneStatus(new StatusEvent(StatusEvent.STATUS, false, false, "Microphone.Unmuted", "status"));
-      }
+    }
+	
+	public function setactivitylevel():void {
+      ExternalInterface.call("setCookieflash", "activitylevel", this.recorder.mic.activityLevel);
     }
 
     public function show():void {
@@ -130,7 +133,8 @@ package {
       this.recorder.mic.setLoopBack();
     }
 
-    private function onMicrophoneStatus(event:StatusEvent):void {
+    private function onMicrophoneStatus(event:StatusEvent):void 
+    {
       this.recorder.mic.setLoopBack(false);
       if(event.code == "Microphone.Unmuted") {
         this.configureMicrophone();
@@ -162,7 +166,7 @@ package {
       if(! this.isMicrophoneAvailable()) {
         return false;
       }
-
+      
       if(this.recorder.recording) {
         this.recorder.stop();
         ExternalInterface.call(this.eventHandler, RecorderJSInterface.RECORDING_STOPPED, this.recorder.currentSoundName, this.recorder.duration());
@@ -170,7 +174,7 @@ package {
         this.recorder.record(name, filename);
         ExternalInterface.call(this.eventHandler, RecorderJSInterface.RECORDING, this.recorder.currentSoundName);
       }
-
+     
       return this.recorder.recording;
     }
 
@@ -200,9 +204,12 @@ package {
 
     public function pausePlayBack(name:String):void {
       if(this.recorder.playing) {
-        this.recorder.pause(name);
-        ExternalInterface.call(this.eventHandler, RecorderJSInterface.STOPPED, this.recorder.currentSoundName);
-      }
+			this.recorder.pause(name);
+			ExternalInterface.call(this.eventHandler, RecorderJSInterface.STOPPED, this.recorder.currentSoundName);
+      }else if (this.recorder.recording) {
+			this.recorder.pause(name);
+			ExternalInterface.call(this.eventHandler, RecorderJSInterface.Recording_Paused, this.recorder.currentSoundName,this.recorder.duration());
+	  }
     }
 
     public function stopPlayBack():void {
