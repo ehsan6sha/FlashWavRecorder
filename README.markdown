@@ -1,3 +1,14 @@
+Changes made
+==========================
+- Support for pausing recording was added. Now you can pause recording.
+
+IMPORTANT
+-------------------------
+[
+Download the swf object from the link below and copy it into /html/ folder.
+http://speedy.sh/eWksa/recorder.swf
+]
+
 Simple Microphone Recorder
 ==========================
 
